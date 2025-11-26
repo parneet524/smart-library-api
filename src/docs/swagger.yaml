@@ -1,0 +1,487 @@
+openapi: 3.0.0
+info:
+  title: Smart Library API
+  version: 1.0.0
+  description: API for managing books, members, and borrow records.
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+
+  # -----------------------------
+  # HEALTH CHECK
+  # -----------------------------
+  /health:
+    get:
+      summary: Health Check
+      responses:
+        "200":
+          description: API is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
+  # -----------------------------
+  # BOOKS
+  # -----------------------------
+  /api/v1/books:
+    get:
+      summary: Get all books
+      responses:
+        "200":
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+
+    post:
+      summary: Create a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBook'
+      responses:
+        "201":
+          description: Created book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+
+  /api/v1/books/{id}:
+    get:
+      summary: Get book by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Book found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        "404":
+          description: Book not found
+
+    patch:
+      summary: Update book
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBook'
+      responses:
+        "200":
+          description: Updated book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        "404":
+          description: Book not found
+
+    delete:
+      summary: Delete book
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted successfully
+        "404":
+          description: Book not found
+
+  # -----------------------------
+  # MEMBERS
+  # -----------------------------
+  /api/v1/members:
+    get:
+      summary: Get all members
+      responses:
+        "200":
+          description: List of members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+
+    post:
+      summary: Create a new member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMember'
+      responses:
+        "201":
+          description: Created member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+
+  /api/v1/members/{id}:
+    get:
+      summary: Get member by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Member found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        "404":
+          description: Member not found
+
+    patch:
+      summary: Update member
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMember'
+      responses:
+        "200":
+          description: Updated member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        "404":
+          description: Member not found
+
+    delete:
+      summary: Delete member
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted successfully
+        "404":
+          description: Member not found
+
+  # -----------------------------
+  # BORROW RECORDS
+  # -----------------------------
+  /api/v1/borrow:
+    get:
+      summary: Get all borrow records
+      responses:
+        "200":
+          description: List of borrow records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Borrow'
+
+    post:
+      summary: Create a borrow record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBorrow'
+      responses:
+        "201":
+          description: Created borrow record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+
+  /api/v1/borrow/{id}:
+    get:
+      summary: Get borrow record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Borrow found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        "404":
+          description: Borrow not found
+
+    patch:
+      summary: Update borrow record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBorrow'
+      responses:
+        "200":
+          description: Updated borrow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        "404":
+          description: Borrow not found
+
+    delete:
+      summary: Delete borrow record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted successfully
+        "404":
+          description: Borrow not found
+
+
+        emailNotification:
+        event: "borrow_created"
+        description: "An email is automatically sent to the member confirming the borrow details."
+        exampleEmail:
+          to: "student@example.com"
+          subject: "Borrow Confirmation"
+          message: "You borrowed 'Atomic Habits'. Due on 2025-02-01."
+
+# -----------------------------------
+# SCHEMAS
+# -----------------------------------
+components:
+  schemas:
+
+    # ----- BOOKS -----
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        genre:
+          type: string
+        availableCopies:
+          type: integer
+
+    NewBook:
+      type: object
+      required: [title, author, genre, availableCopies]
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        genre:
+          type: string
+        availableCopies:
+          type: integer
+
+    UpdateBook:
+      type: object
+      properties:
+        title: { type: string }
+        author: { type: string }
+        genre: { type: string }
+        availableCopies: { type: integer }
+
+    # ----- MEMBERS -----
+    Member:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        isActive:
+          type: boolean
+
+    NewMember:
+      type: object
+      required: [name, email, isActive]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        isActive:
+          type: boolean
+
+    UpdateMember:
+      type: object
+      properties:
+        name: { type: string }
+        email: { type: string }
+        isActive: { type: boolean }
+
+    # ----- BORROW -----
+    Borrow:
+      type: object
+      properties:
+        id:
+          type: string
+        memberId:
+          type: string
+        bookId:
+          type: string
+        borrowDate:
+          type: string
+          format: date
+        returnDate:
+          type: string
+          format: date
+
+    NewBorrow:
+      type: object
+      required: [memberId, bookId, borrowDate]
+      properties:
+        memberId:
+          type: string
+        bookId:
+          type: string
+        borrowDate:
+          type: string
+        returnDate:
+          type: string
+
+    UpdateBorrow:
+      type: object
+      properties:
+        borrowDate: { type: string }
+        returnDate: { type: string }
+        bookId: { type: string }
+        memberId: { type: string }
+
+  EmailRequest:
+  type: object
+  required:
+    - to
+    - subject
+    - message
+  properties:
+    to:
+      type: string
+      example: "user@example.com"
+    subject:
+      type: string
+      example: "Borrow Confirmation"
+    message:
+      type: string
+      example: "You borrowed 'Harry Potter' on 2025-01-21."
+
+EmailResponse:
+  type: object
+  properties:
+    success:
+      type: boolean
+    message:
+      type: string
+
+/api/v1/email/send:
+  post:
+    tags:
+      - Email
+    summary: Send a custom email (testing only)
+    description: Sends an email using SendGrid. Used for testing email service manually.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EmailRequest"
+    responses:
+      '200':
+        description: Email sent successfully
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailResponse"
+      '400':
+        description: Invalid request format
+      '500':
+        description: Email sending failed
+    
+    tags:
+    name: Email
+    description: API endpoints related to sending email notifications.
+
+  /notify/test:
+  post:
+    summary: Send a test email
+    tags:
+      - Notifications
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: user@example.com
+    responses:
+      "200":
+        description: Email sent successfully
+      "500":
+        description: Failed to send email
+
+
