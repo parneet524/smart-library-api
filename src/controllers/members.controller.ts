@@ -6,8 +6,15 @@ export async function createMember(req: Request, res: Response) {
   res.status(201).json(member);
 }
 
-export async function listMembers(_req: Request, res: Response) {
-  const members = await service.listMembers();
+export async function listMembers(req: Request, res: Response) {
+  const sort = req.query?.sort as string | undefined;
+
+  let members = await service.listMembers();
+
+  if (sort === "name") {
+    members = [...members].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   res.json(members);
 }
 

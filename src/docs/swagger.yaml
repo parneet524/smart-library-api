@@ -484,4 +484,20 @@ EmailResponse:
       "500":
         description: Failed to send email
 
+/members:
+  get:
+    summary: Get all members (with optional sorting)
+    parameters:
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [name]
+        description: Sort members alphabetically by name
+    responses:
+      '200':
+        description: List of members
+
+
 
